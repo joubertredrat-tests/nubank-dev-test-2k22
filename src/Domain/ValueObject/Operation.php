@@ -51,6 +51,11 @@ class Operation
         return $this->quantity;
     }
 
+    public function getTotal(): int
+    {
+        return $this->unitCost * $this->quantity;
+    }
+
     private static function isValidType(string $type): bool
     {
         return in_array($type, self::getTypesAvailable());

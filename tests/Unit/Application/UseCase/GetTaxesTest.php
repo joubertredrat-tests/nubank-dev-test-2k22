@@ -6,14 +6,19 @@ namespace Nubank\DevTest\Tests\Unit\Application\UseCase;
 
 use Nubank\DevTest\Application\UseCase\GetTaxes;
 use Nubank\DevTest\Application\UseCase\OperationCollection;
+use Nubank\DevTest\Application\UseCase\TaxCollection;
 use Nubank\DevTest\Domain\ValueObject\Operation;
+use Nubank\DevTest\Domain\ValueObject\Tax;
 use PHPUnit\Framework\TestCase;
 
 class GetTaxesTest extends TestCase
 {
-    public function testExecute(): void
+    public function testExecuteCase1(): void
     {
-        $returnExpected = '[{"tax": 0},{"tax": 0},{"tax": 0}]';
+        $returnExpected = new TaxCollection();
+        $returnExpected->addTax(new Tax(0));
+        $returnExpected->addTax(new Tax(0));
+        $returnExpected->addTax(new Tax(0));
 
         $collection = new OperationCollection();
         $collection->addOperation(
