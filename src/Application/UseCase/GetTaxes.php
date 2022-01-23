@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Nubank\DevTest\Application\UseCase;
 
-use PHPUnit\Framework\TestCase;
-
-class GetTaxes extends TestCase
+class GetTaxes
 {
-    public function execute(): string
+    public function execute(OperationCollection $collection): string
     {
         return '[{"tax": 0},{"tax": 0},{"tax": 0}]';
     }
