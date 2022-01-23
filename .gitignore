@@ -4,3 +4,5 @@
 .phpunit.result.cache
 /phpunit.xml
 /tests/_reports/*
+/.idea/
+.DS_Store
