@@ -30,10 +30,25 @@ class NubankTaxCalculator implements TaxCalculatorInterface
         }
 
         if ($operation->isTaxExemption()) {
-            return new Tax(0);
+            return $this->getTaxExemptionCalculated($operation);
         }
 
         return $this->getTaxCalculated($operation);
+    }
+
+    private function getTaxExemptionCalculated(Operation $operation): Tax
+    {
+        $profitPrice = $this
+            ->profitPriceCalculator
+            ->getPrice()
+        ;
+
+        if ($profitPrice > $operation->getUnitCost()) {
+            $totalProfitPrice = $profitPrice * $operation->getQuantity();
+            $this->lossAmount += ($totalProfitPrice - $operation->getTotal());
+        }
+
+        return new Tax(0);
     }
 
     private function getTaxCalculated(Operation $operation): Tax
@@ -50,8 +65,19 @@ class NubankTaxCalculator implements TaxCalculatorInterface
 
         $totalProfitPrice = $operation->getTotal() - ($profitPrice * $operation->getQuantity());
         if ($this->lossAmount > 0) {
-            $totalProfitPrice -= $this->lossAmount;
+            $temp = $this->lossAmount;
+            if ($this->lossAmount > $totalProfitPrice) {
+                $this->lossAmount -= $totalProfitPrice;
+                return new Tax(0);
+            } else {
+                $this->lossAmount = 0;
+            }
+
+            $totalProfitPrice -= $temp;
         }
+
+        var_dump('$this->lossAmount ' . $this->lossAmount);
+        var_dump('$totalProfitPrice ' . $totalProfitPrice);
 
         return new Tax($totalProfitPrice * self::TAX_PERCENT_DECIMAL);
     }
