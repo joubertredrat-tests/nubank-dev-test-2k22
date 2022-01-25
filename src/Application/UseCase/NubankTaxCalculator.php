@@ -44,7 +44,7 @@ class NubankTaxCalculator implements TaxCalculatorInterface
         ;
 
         if ($profitPrice > $operation->getUnitCost()) {
-            $this->registerLossAmountOperation($operation);
+            $this->increaseLossAmountOperation($operation);
         }
 
         return new Tax(0);
@@ -58,43 +58,35 @@ class NubankTaxCalculator implements TaxCalculatorInterface
         ;
 
         if ($profitPrice > $operation->getUnitCost()) {
-            $this->registerLossAmountOperation($operation);
+            $this->increaseLossAmountOperation($operation);
             return new Tax(0);
         }
 
-        $totalProfitPrice = $operation->getTotal() - ($profitPrice * $operation->getQuantity());
-        if ($this->lossAmount > $totalProfitPrice) {
-            $this->lossAmount -= $totalProfitPrice;
+        $operationProfitCalculated = new Operation("sell", $profitPrice, $operation->getQuantity());
+
+        if ($this->lossAmount > $operationProfitCalculated->getTotal()) {
+            $this->lossAmount -= $operationProfitCalculated->getTotal();
             return new Tax(0);
         }
 
+        $totalProfitPrice = $operation->getTotal() - $operationProfitCalculated->getTotal();
 
         if ($this->lossAmount > 0) {
-            $temp = $this->lossAmount;
-            if ($this->lossAmount > $totalProfitPrice) {
-                $this->lossAmount -= $totalProfitPrice;
-                return new Tax(0);
-            } else {
-                $this->lossAmount = 0;
-            }
-
-            $totalProfitPrice -= $temp;
+            $totalProfitPrice -= $this->lossAmount;
+            $this->lossAmount = 0;
         }
-
-        var_dump('$this->lossAmount ' . $this->lossAmount);
-        var_dump('$totalProfitPrice ' . $totalProfitPrice);
 
         return new Tax($totalProfitPrice * self::TAX_PERCENT_DECIMAL);
     }
 
-    private function registerLossAmountOperation(Operation $operation): void
+    private function increaseLossAmountOperation(Operation $operation): void
     {
         $profitPrice = $this
             ->profitPriceCalculator
             ->getPrice()
         ;
 
-        $operationProfitPrice = new Operation("sell", $profitPrice, $operation->getQuantity());
-        $this->lossAmount += ($operationProfitPrice->getTotal() - $operation->getTotal());
+        $operationProfitCalculated = new Operation("sell", $profitPrice, $operation->getQuantity());
+        $this->lossAmount += ($operationProfitCalculated->getTotal() - $operation->getTotal());
     }
 }
