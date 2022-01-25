@@ -44,8 +44,7 @@ class NubankTaxCalculator implements TaxCalculatorInterface
         ;
 
         if ($profitPrice > $operation->getUnitCost()) {
-            $totalProfitPrice = $profitPrice * $operation->getQuantity();
-            $this->lossAmount += ($totalProfitPrice - $operation->getTotal());
+            $this->registerLossAmountOperation($operation);
         }
 
         return new Tax(0);
@@ -59,11 +58,17 @@ class NubankTaxCalculator implements TaxCalculatorInterface
         ;
 
         if ($profitPrice > $operation->getUnitCost()) {
-            $this->lossAmount += $operation->getTotal();
+            $this->registerLossAmountOperation($operation);
             return new Tax(0);
         }
 
         $totalProfitPrice = $operation->getTotal() - ($profitPrice * $operation->getQuantity());
+        if ($this->lossAmount > $totalProfitPrice) {
+            $this->lossAmount -= $totalProfitPrice;
+            return new Tax(0);
+        }
+
+
         if ($this->lossAmount > 0) {
             $temp = $this->lossAmount;
             if ($this->lossAmount > $totalProfitPrice) {
@@ -80,5 +85,16 @@ class NubankTaxCalculator implements TaxCalculatorInterface
         var_dump('$totalProfitPrice ' . $totalProfitPrice);
 
         return new Tax($totalProfitPrice * self::TAX_PERCENT_DECIMAL);
+    }
+
+    private function registerLossAmountOperation(Operation $operation): void
+    {
+        $profitPrice = $this
+            ->profitPriceCalculator
+            ->getPrice()
+        ;
+
+        $operationProfitPrice = new Operation("sell", $profitPrice, $operation->getQuantity());
+        $this->lossAmount += ($operationProfitPrice->getTotal() - $operation->getTotal());
     }
 }
