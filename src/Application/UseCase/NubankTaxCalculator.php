@@ -11,7 +11,7 @@ class NubankTaxCalculator implements TaxCalculatorInterface
 {
     private const TAX_PERCENT_DECIMAL = 0.2;
     private ProfitPriceCalculatorInterface $profitPriceCalculator;
-    private int $lossAmount;
+    private float $lossAmount;
 
     public function __construct(ProfitPriceCalculatorInterface $profitPriceCalculator)
     {
@@ -44,11 +44,15 @@ class NubankTaxCalculator implements TaxCalculatorInterface
         ;
 
         if ($profitPrice > $operation->getUnitCost()) {
-            // add loss amount
+            $this->lossAmount += $operation->getTotal();
             return new Tax(0);
         }
 
-        $totalProfitPrice = $profitPrice * $operation->getQuantity();
-        return new Tax(($operation->getTotal() - $totalProfitPrice) * self::TAX_PERCENT_DECIMAL);
+        $totalProfitPrice = $operation->getTotal() - ($profitPrice * $operation->getQuantity());
+        if ($this->lossAmount > 0) {
+            $totalProfitPrice -= $this->lossAmount;
+        }
+
+        return new Tax($totalProfitPrice * self::TAX_PERCENT_DECIMAL);
     }
 }
