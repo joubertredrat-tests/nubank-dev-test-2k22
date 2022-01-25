@@ -141,4 +141,36 @@ class GetTaxesTest extends TestCase
 
         self::assertEquals($returnExpected, $returnGot);
     }
+
+    public function testExecuteCase5(): void
+    {
+        $returnExpected = new TaxCollection();
+        $returnExpected->addTax(new Tax(0));
+        $returnExpected->addTax(new Tax(0));
+        $returnExpected->addTax(new Tax(0));
+        $returnExpected->addTax(new Tax(10_000));
+
+        $collection = new OperationCollection();
+        $collection->addOperation(
+            new Operation("buy", 10, 10_000)
+        );
+        $collection->addOperation(
+            new Operation("buy", 25, 5_000)
+        );
+        $collection->addOperation(
+            new Operation("sell", 15, 10_000)
+        );
+        $collection->addOperation(
+            new Operation("sell", 25, 5_000)
+        );
+
+        $getTaxes = new GetTaxes(
+            new NubankTaxCalculator(
+                new WeightedPriceCalculator()
+            )
+        );
+        $returnGot = $getTaxes->execute($collection);
+
+        self::assertEquals($returnExpected, $returnGot);
+    }
 }
