@@ -8,7 +8,7 @@ use Nubank\DevTest\Application\UseCase\GetTaxes;
 use Nubank\DevTest\Application\UseCase\NubankTaxCalculator;
 use Nubank\DevTest\Application\UseCase\OperationCollection;
 use Nubank\DevTest\Application\UseCase\TaxCollection;
-use Nubank\DevTest\Application\UseCase\WeightedPriceCalculator;
+use Nubank\DevTest\Application\UseCase\WeightedProfitPriceCalculator;
 use Nubank\DevTest\Domain\ValueObject\Operation;
 use Nubank\DevTest\Domain\ValueObject\Tax;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +35,7 @@ class GetTaxesTest extends TestCase
 
         $getTaxes = new GetTaxes(
             new NubankTaxCalculator(
-                new WeightedPriceCalculator()
+                new WeightedProfitPriceCalculator()
             )
         );
         $returnGot = $getTaxes->execute($collection);
@@ -68,7 +68,7 @@ class GetTaxesTest extends TestCase
 
         $getTaxes = new GetTaxes(
             new NubankTaxCalculator(
-                new WeightedPriceCalculator()
+                new WeightedProfitPriceCalculator()
             )
         );
         $returnGot = $getTaxes->execute($collection);
@@ -101,7 +101,7 @@ class GetTaxesTest extends TestCase
 
         $getTaxes = new GetTaxes(
             new NubankTaxCalculator(
-                new WeightedPriceCalculator()
+                new WeightedProfitPriceCalculator()
             )
         );
         $returnGot = $getTaxes->execute($collection);
@@ -134,7 +134,7 @@ class GetTaxesTest extends TestCase
 
         $getTaxes = new GetTaxes(
             new NubankTaxCalculator(
-                new WeightedPriceCalculator()
+                new WeightedProfitPriceCalculator()
             )
         );
         $returnGot = $getTaxes->execute($collection);
@@ -166,7 +166,7 @@ class GetTaxesTest extends TestCase
 
         $getTaxes = new GetTaxes(
             new NubankTaxCalculator(
-                new WeightedPriceCalculator()
+                new WeightedProfitPriceCalculator()
             )
         );
         $returnGot = $getTaxes->execute($collection);
@@ -202,7 +202,7 @@ class GetTaxesTest extends TestCase
 
         $getTaxes = new GetTaxes(
             new NubankTaxCalculator(
-                new WeightedPriceCalculator()
+                new WeightedProfitPriceCalculator()
             )
         );
         $returnGot = $getTaxes->execute($collection);

@@ -6,7 +6,7 @@ namespace Nubank\DevTest\Application\UseCase;
 
 use Nubank\DevTest\Domain\ValueObject\Operation;
 
-class WeightedPriceCalculator implements ProfitPriceCalculatorInterface
+class WeightedProfitPriceCalculator implements ProfitPriceCalculatorInterface
 {
     private float $totalPerOperation;
     private int $quantityPerOperation;
