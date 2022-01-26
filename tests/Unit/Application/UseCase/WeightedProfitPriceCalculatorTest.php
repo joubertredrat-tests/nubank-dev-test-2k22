@@ -21,6 +21,9 @@ class WeightedProfitPriceCalculatorTest extends TestCase
         $weightedProfitPriceCalculator->addBuyOperation(
             new Operation('buy', 13, 250)
         );
+        $weightedProfitPriceCalculator->addBuyOperation(
+            new Operation('sell', 30, 500)
+        );
         $priceGot = $weightedProfitPriceCalculator->getPrice();
 
         self::assertEquals($priceExpected, $priceGot);
