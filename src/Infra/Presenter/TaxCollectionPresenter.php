@@ -9,7 +9,7 @@ use Nubank\DevTest\Domain\ValueObject\Tax;
 
 use function json_encode;
 
-class TaxResponsePresenter
+class TaxCollectionPresenter
 {
     private TaxCollection $taxCollection;
 
